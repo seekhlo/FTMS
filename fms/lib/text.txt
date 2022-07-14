@@ -1,0 +1,15 @@
+CNIC			       Password		       Dept
+33102-0882940-1		IT@123			IT
+33103-0946391-5		Library@123		Library
+33104-0918065-7		OSA@123		OSA
+
+https://fmtsapi.ntu.edu.pk/login
+variables: cnic, userpass
+
+https://fmtsapi.ntu.edu.pk/dashboard/token/dept_id/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/receive_file
+Parameters: barcode, employee_id, dept_id, sub_dept_id, token
+
+https://fmtsapi.ntu.edu.pk/create_file
+Parameters: file_subject, file_desc, employee_id, dept_id, sub_dept_id, token
