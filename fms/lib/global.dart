@@ -211,3 +211,149 @@ checkConnection() async {
     return false;
   }
 }
+
+makeLink(String s) {
+  s = s.replaceAll('token', globalUser['token'].toString());
+  s = s.replaceAll('employee_id', globalUser['employee_id'].toString());
+  s = s.replaceAll('sub_dept_id', globalUser['sub_dept_id'].toString());
+  s = s.replaceAll('dept_id', globalUser['dept_id'].toString());
+  return s;
+}
+
+Widget dropdownDialog({
+  required BuildContext context,
+  String? hint,
+  String displayValue = 'name',
+  required List<dynamic> data,
+  required void Function(void Function() fn) setState,
+}) {
+  List<dynamic> sortedList = data;
+  bool searching = true;
+
+  return StatefulBuilder(
+    builder: (context, setState) {
+      if (searching) {
+        sortedList = data;
+      }
+      sortList(value) {
+        setState(() {
+          searching = false;
+        });
+        if (value.toString().isEmpty) {
+          setState(() {
+            sortedList = data;
+          });
+        } else {
+          setState(() {
+            try {
+              sortedList = data
+                  .where((element) => getDisplayValue(displayValue, element)
+                      .toLowerCase()
+                      .contains(value.toString().toLowerCase()))
+                  .toList();
+            } catch (err) {
+              sortedList = data
+                  .where((element) => getDisplayValue(displayValue, element)
+                      .toLowerCase()
+                      .contains(value.toString().toLowerCase()))
+                  .toList();
+            }
+          });
+        }
+        setState(() {});
+      }
+
+      return SizedBox(
+        height: 330,
+        width: 330,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              autofocus: true,
+              maxLength: 50,
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                labelStyle: TextStyle(),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(
+                  Icons.search,
+                ),
+              ),
+              onChanged: (value) {
+                sortList(value);
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: sortedList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  try {
+                    return ListTile(
+                      leading: Text((index + 1).toString()),
+                      title: Text(
+                          getDisplayValue(displayValue, sortedList[index])),
+                      onTap: () {
+                        Navigator.pop(context, sortedList[index]);
+                      },
+                    );
+                  } catch (err) {
+                    rethrow;
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+dynamic getDisplayValue(String propertyName, dynamic data) {
+  try {
+    var mapRep = (data is Map) ? data : data.toMap();
+    if (mapRep.containsKey(propertyName)) {
+      return mapRep[propertyName];
+    }
+    throw ArgumentError('property not found');
+  } catch (ex) {
+    return data;
+  }
+}
+
+Future<dynamic> selectDropdown({
+  required BuildContext context,
+  dynamic data,
+  String? hint,
+  String displayValue = 'name',
+  required void Function(void Function() fn) setState,
+}) async {
+  dynamic picked = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            clipBehavior: Clip.antiAlias,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            title: Text(hint!),
+            content: dropdownDialog(
+              context: context,
+              data: data,
+              displayValue: displayValue,
+              setState: setState,
+            ),
+          );
+        });
+      });
+  if (picked != null) {
+    return picked;
+  }
+}

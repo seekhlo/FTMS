@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'global.dart';
+import 'model/file.dart';
 
 String login_url = "https://fmtsapi.ntu.edu.pk/login";
 String dashboard_url =
@@ -17,6 +18,10 @@ Future loginAPI(cnic, pass) async {
     'userpass': pass,
   });
   var data = jsonDecode(res.body);
+  // var user = await getUserDetails(data);
+  // print(data);
+  // print(user);
+  // data.add(user['data']);
   return data;
 }
 
@@ -39,7 +44,34 @@ Future getDashboardAPI() async {
 // https://fmtsapi.ntu.edu.pk/dashboard/token/dept_id/sub_dept_id/employee_id
   var data = Map<String, dynamic>.from(globalUser);
   String url =
-      "https://fmtsapi.ntu.edu.pk/dashboard/${data['token']}/${data['dept_id']}/${data['sub_dept_id']}/${data['employee_id']}";
+      "https://fmtsapi.ntu.edu.pk/dashboard/${data['token']}/${data['sub_dept_id']}/${data['employee_id']}";
   final http.Response res = await http.get(Uri.parse(url));
   return jsonDecode(res.body);
+}
+
+Future getUserDetails() async {
+  var data = Map<String, dynamic>.from(globalUser);
+
+// https://fmtsapi.ntu.edu.pk/fmts_employees/token/employee_id
+  String url =
+      "https://fmtsapi.ntu.edu.pk/fmts_employees/${data['token']}/${data['employee_id']}";
+  final http.Response res = await http.get(Uri.parse(url));
+  return jsonDecode(res.body)['data'];
+}
+
+Future getFiles(req) async {
+  final http.Response res = await http.get(Uri.parse(req));
+  return jsonDecode(res.body);
+}
+
+Future printBarcode(fileID) async {
+  var data = Map<String, dynamic>.from(globalUser);
+
+  // https://fmtsapi.ntu.edu.pk/print_barcode/token/employee_id/file_id
+  String url =
+      "https://fmtsapi.ntu.edu.pk/print_barcode/${data['token']}/${data['employee_id']}/${fileID}";
+  final http.Response res = await http.get(Uri.parse(url));
+  return jsonDecode(res.body)['data'];
+  // return res.body;
+  // return "a";
 }

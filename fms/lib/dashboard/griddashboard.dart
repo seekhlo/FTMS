@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fms/global.dart';
 
+import '../forms/filepage.dart';
 import '../requests.dart';
 
 class GridDashboard extends StatefulWidget {
@@ -13,36 +14,62 @@ Map tiles = {};
 Map<String, dynamic> dashboard_map = {
   "average_time": {
     'title': "Average Time",
-    "icon": Icon(Icons.timelapse, size: 60)
+    "icon": Icon(Icons.timelapse, size: 60),
+    "link": "null",
   },
-  "new_files": {'title': "New Files", "icon": Icon(Icons.file_copy, size: 42)},
+  "new_files": {
+    'title': "New Files",
+    "icon": Icon(Icons.file_copy, size: 42),
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/new_files/token/sub_dept_id/employee_id"),
+  },
   "inprocess_files": {
     'title': "Inprocess Files",
-    "icon": Icon(Icons.wifi_protected_setup_sharp, size: 60)
+    "icon": Icon(Icons.wifi_protected_setup_sharp, size: 60),
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/inprocess_files/token/sub_dept_id/employee_id"),
   },
   "opened_files": {
     'title': "Opened Files",
-    "icon": Icon(Icons.open_in_new, size: 60)
+    "link": "null",
+    "icon": Icon(Icons.open_in_new, size: 60),
   },
   "archived_files": {
     'title': "Archived Files",
-    "icon": Icon(Icons.archive, size: 60)
+    "icon": Icon(Icons.archive, size: 60),
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/archived_files/token/sub_dept_id/employee_id"),
   },
   "other_dept_files": {
     'title': "Other Department",
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/other_dept_files/token/sub_dept_id/employee_id"),
     "icon": Icon(Icons.other_houses, size: 60)
   },
   "other_dept_files_received": {
     'title': "Other Department Received",
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/today_checkedin/token/sub_dept_id/employee_id"),
     "icon": Icon(Icons.download, size: 60)
   },
   "other_dept_files_sent": {
     'title': "Other Department Sent",
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/today_checkedout/token/sub_dept_id/employee_id"),
+    "link": "null",
     "icon": Icon(Icons.upload, size: 60)
   },
   "my_watch_list_files": {
     'title': "Watch List",
-    "icon": Icon(Icons.list, size: 60)
+    "icon": Icon(Icons.list, size: 60),
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/my_watchlist/token/sub_dept_id/employee_id"),
+  },
+  "completed_files": {
+    'title': "Completed Files",
+    "icon": Icon(Icons.done, size: 60),
+    "link": makeLink(
+        "https://fmtsapi.ntu.edu.pk/completed_files/token/sub_dept_id/employee_id"),
   },
 };
 
@@ -76,7 +103,10 @@ class _GridDashboardState extends State<GridDashboard> {
       Map data = dashboard_map[key];
       var element = tiles[key];
       DashboardItem d = DashboardItem(
-          number: element.toString(), title: data['title'], icon: data['icon']);
+          number: element.toString(),
+          title: data['title'],
+          icon: data['icon'],
+          link: data['link']);
       myDList.add(d);
     }
     // for (var element in tiles.entries) {
@@ -92,50 +122,61 @@ class _GridDashboardState extends State<GridDashboard> {
   }
 
   Widget getGridTile(data) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Color(color),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+    return InkWell(
+      onTap: () {
+        if (data.link! != "null" && data.number! != "0") {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => FilePage(
+                    link: data.link!,
+                    title: data.title!,
+                  )));
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: Color(color),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            // color: Colors.white,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            data.icon!,
+            SizedBox(
+              height: 14,
             ),
-          ],
-          // color: Colors.white,
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          data.icon!,
-          SizedBox(
-            height: 14,
-          ),
-          Center(
-            child: Text(
-              data.title!,
+            Center(
+              child: Text(
+                data.title!,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.openSans(
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600)),
+              ),
+            ),
+            SizedBox(
+              height: 13,
+            ),
+            Text(
+              data.number!,
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                   textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
+                      color: Colors.white70,
+                      fontSize: 11,
                       fontWeight: FontWeight.w600)),
             ),
-          ),
-          SizedBox(
-            height: 13,
-          ),
-          Text(
-            data.number!,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600)),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -190,6 +231,7 @@ class _GridDashboardState extends State<GridDashboard> {
 class DashboardItem {
   String? title;
   String? number;
+  String? link;
   Icon? icon;
-  DashboardItem({this.title, this.number, this.icon});
+  DashboardItem({this.title, this.number, this.icon, this.link});
 }

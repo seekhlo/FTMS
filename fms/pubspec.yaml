@@ -10,7 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences:
+  gallery_saver:
+  path_provider:
   cupertino_icons: ^1.0.2
+  barcode_widget:
   animated_splash_screen:
   fluid_bottom_nav_bar:
   http:

@@ -52,6 +52,22 @@ var addnewfilefields = [
 ];
 
 class _NewFileFormState extends State<NewFileForm> {
+  bool loader = true;
+  String watchList = '';
+  var watchListController = TextEditingController();
+  var list;
+  @override
+  void initState() {
+    super.initState();
+    getUserDetails().then((value) {
+      print(value);
+      list = value;
+    }).whenComplete(() {
+      loader = false;
+      setState(() {});
+    });
+  }
+
   var pageKey = GlobalKey<ScaffoldState>();
 
   textfields() {
@@ -99,6 +115,27 @@ class _NewFileFormState extends State<NewFileForm> {
             color: mainColor,
           ),
           ...textfields(),
+          loader
+              ? CircularProgressIndicator()
+              : TextField(
+                  decoration: const InputDecoration(label: Text("Watch List")),
+                  controller: watchListController,
+                  onTap: () async {
+                    var data = await selectDropdown(
+                        context: context,
+                        setState: setState,
+                        data: list,
+                        displayValue: 'FullName',
+                        hint: 'Select Watch List');
+                    if (data == null) {
+                    } else {
+                      watchListController.text = data['EmployeeID'].toString() +
+                          '/' +
+                          data['FullName'];
+                      setState(() {});
+                    }
+                  },
+                ),
           inputButtons()
         ]),
       ),
@@ -135,6 +172,7 @@ class _NewFileFormState extends State<NewFileForm> {
           e['controller'] as TextEditingController;
       controller.text = "";
     }
+    watchListController.text = "";
   }
 
   saveFile() async {
@@ -147,12 +185,16 @@ class _NewFileFormState extends State<NewFileForm> {
             e['controller'] as TextEditingController;
         fieldValues[e['key'].toString()] = controller.text;
       }
+      if (watchListController.text != "") {
+        fieldValues['watch_list'] = watchListController.text.split('/')[0];
+      }
       var data = Map<String, dynamic>.from(globalUser);
       fieldValues['employee_id'] = data['employee_id'].toString();
       fieldValues['dept_id'] = data['dept_id'].toString();
       fieldValues['sub_dept_id'] = data['sub_dept_id'].toString();
       fieldValues['token'] = data['token'].toString();
       var res = await createFileAPI(fieldValues);
+      // var res;
       showSnackbar(
           key: pageKey, msg: res['message'], status: res['status'] == 1);
       if (res['status'] == 1) {

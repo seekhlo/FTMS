@@ -6,10 +6,36 @@ CNIC			       Password		       Dept
 https://fmtsapi.ntu.edu.pk/login
 variables: cnic, userpass
 
-https://fmtsapi.ntu.edu.pk/dashboard/token/dept_id/sub_dept_id/employee_id
+https://fmtsapi.ntu.edu.pk/dashboard/token/sub_dept_id/employee_id
 
 https://fmtsapi.ntu.edu.pk/receive_file
 Parameters: barcode, employee_id, dept_id, sub_dept_id, token
 
 https://fmtsapi.ntu.edu.pk/create_file
 Parameters: file_subject, file_desc, employee_id, dept_id, sub_dept_id, token
+
+https://fmtsapi.ntu.edu.pk/new_files/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/inprocess_files/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/completed_files/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/archived_files/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/other_dept_files/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/today_checkedin/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/today_checkedout/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/my_watchlist/token/sub_dept_id/employee_id
+
+https://fmtsapi.ntu.edu.pk/fmts_employees/token/employee_id
+
+
+https://fmtsapi.ntu.edu.pk/print_barcode/token/employee_id/file_id
+
+https://fmtsapi.ntu.edu.pk/edit_file/token/employee_id/file_id
+
+https://fmtsapi.ntu.edu.pk/save_edit_file
+parameters: file_id, file_subject, file_desc, employee_id, token
