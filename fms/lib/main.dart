@@ -5,6 +5,7 @@ import 'package:fms/global.dart';
 import 'package:fms/route_generator.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   globalUser = await checkLogin();
   await checkConnection();

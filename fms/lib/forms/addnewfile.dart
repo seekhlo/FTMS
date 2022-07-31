@@ -105,7 +105,7 @@ class _NewFileFormState extends State<NewFileForm> {
             ],
           ),
         ),
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        body: ListView(children: [
           const SizedBox(
             height: 30,
           ),

@@ -3,6 +3,8 @@ import 'package:fms/forms/addnewfile.dart';
 import 'package:fms/forms/receivefile.dart';
 import 'package:fms/login/screens/login_screen.dart';
 
+import 'navigation_bar/fluid_nav_bar.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // final args = settings.arguments;
@@ -20,6 +22,10 @@ class RouteGenerator {
       case '/login':
         {
           return MaterialPageRoute(builder: (_) => const LoginScreen());
+        }
+      case '/dashboard':
+        {
+          return MaterialPageRoute(builder: (_) => HomeScreen());
         }
 
       default:

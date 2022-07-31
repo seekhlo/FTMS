@@ -10,6 +10,7 @@ import 'login/screens/login_screen.dart';
 import 'navigation_bar/fluid_nav_bar.dart';
 
 var globalUser;
+
 checkLogin() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   var user = pref.getString('user');
@@ -36,6 +37,7 @@ removeUser() async {
 
 splash() {
   return AnimatedSplashScreen(
+      duration: 1000,
       backgroundColor: Colors.black,
       splash: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +128,6 @@ List<Color?> colors = [
 ];
 MaterialColor mainColor = Colors.blue;
 List<MaterialColor> appColors = [
-  // Colors.red,
   Colors.blue,
   // Colors.green,
   Colors.cyan,
@@ -168,6 +169,21 @@ drawer(context) {
       ),
       title: const Text(
         'Logout',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+      // tileColor: Colors.red[900],
+    ),
+    ListTile(
+      onTap: () async {
+        Navigator.of(context).pushReplacementNamed('/dashboard');
+      },
+      leading: const Icon(
+        Icons.dashboard,
+        size: 20,
+        // color: Colors.white,
+      ),
+      title: const Text(
+        'Dashboard',
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
       ),
       // tileColor: Colors.red[900],

@@ -63,27 +63,31 @@ class _FilePageState extends State<FilePage> {
               context: context,
               builder: (_) => AlertDialog(
                     title: Text(data['FMTSFileTitle']),
-                    content: RepaintBoundary(
-                        key: _screenShotKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton(
-                                onPressed: () {
-                                  save(_screenShotKey, data['FMTSFileID']);
-                                },
-                                child: Text("Save")),
-                            Center(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              save(_screenShotKey, data['FMTSFileID']);
+                            },
+                            child: Text("Save")),
+                        RepaintBoundary(
+                          key: _screenShotKey,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: BarcodeWidget(
                                 data: data['FMTSFileBarcode'],
                                 barcode: Barcode.code128(),
                                 width: 200,
                                 height: 200,
-                                drawText: false,
+                                drawText: true,
                               ),
                             ),
-                          ],
-                        )),
+                          ),
+                        ),
+                      ],
+                    ),
                   ));
         },
       ));
@@ -129,7 +133,7 @@ class _FilePageState extends State<FilePage> {
   void save(_screenShotKey, id) async {
     takeScreenshot(_screenShotKey, id).then((value) async {
       bool? saved = await GallerySaver.saveImage(value.path);
-      print(saved);
+      Navigator.of(context).pop();
     }).catchError((onError) {
       print(onError);
     });
