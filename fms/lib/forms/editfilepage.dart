@@ -9,14 +9,24 @@ import '../requests.dart';
 // https://fmtsapi.ntu.edu.pk/create_file
 // Parameters: file_subject, file_desc, employee_id, dept_id, sub_dept_id, token
 
-class NewFileForm extends StatefulWidget {
-  const NewFileForm({Key? key}) : super(key: key);
+class EditFileForm extends StatefulWidget {
+  var data;
+  EditFileForm(this.data, {Key? key}) : super(key: key);
 
   @override
-  State<NewFileForm> createState() => _NewFileFormState();
+  State<EditFileForm> createState() => _EditFileFormState();
 }
 
 var addnewfilefields = [
+  {
+    'key': 'file_id',
+    'title': 'File ID',
+    'type': 'textfield',
+    'required': true,
+    'controller': TextEditingController(),
+    'disable': true,
+    'data_fill': 'FMTSFileID'
+  },
   {
     'key': 'file_subject',
     'title': 'File Title/Subject',
@@ -24,6 +34,7 @@ var addnewfilefields = [
     'required': true,
     'controller': TextEditingController(),
     'disable': false,
+    'data_fill': 'FMTSFileTitle'
   },
   {
     'key': 'file_desc',
@@ -31,52 +42,42 @@ var addnewfilefields = [
     'type': 'textfield',
     'required': true,
     'controller': TextEditingController(),
-    'disable': false
+    'disable': false,
+    'data_fill': 'FMTSFileDesc'
   },
-  // {
-  //   'key': 'file_desc',
-  //   'title': 'File Description',
-  //   'type': 'textarea',
-  //   'required': true,
-  //   'controller': TextEditingController(),
-  //   'disable': false
-  // },
-  // {
-  //   'key': 'file_watch_list',
-  //   'title': 'File Watch List',
-  //   'type': 'textfield',
-  //   'required': false,
-  //   'controller': TextEditingController(),
-  //   'disable': false
-  // }
 ];
 
-class _NewFileFormState extends State<NewFileForm> {
+class _EditFileFormState extends State<EditFileForm> {
   bool loader = true;
   String watchList = '';
   var watchListController = TextEditingController();
   var list;
   @override
   void initState() {
+    print(widget.data);
     super.initState();
-    getUserDetails().then((value) {
-      print(value);
-      list = value;
-    }).whenComplete(() {
-      loader = false;
-      setState(() {});
-    });
+    // getUserDetails().then((value) {
+    //   // print(value);
+    //   list = value;
+    // }).whenComplete(() {
+    //   loader = false;
+    //   setState(() {});
+    // });
   }
 
   var pageKey = GlobalKey<ScaffoldState>();
 
   textfields() {
     return addnewfilefields.map((e) {
+      TextEditingController c = e['controller'] as TextEditingController;
+      c.text = widget.data[e['data_fill']];
+      // print(e['data_fill']);
+      // print(widget.data['FMTSFileID']);
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
             readOnly: e['disable'] == true,
-            controller: e['controller'] as TextEditingController,
+            controller: c,
             decoration: InputDecoration(
               labelText: e['title'].toString() +
                   (e['required'] as bool ? ' *' : ' (Optional)'),
@@ -94,14 +95,14 @@ class _NewFileFormState extends State<NewFileForm> {
     return SafeArea(
       child: Scaffold(
         key: pageKey,
-        drawer: drawer(context),
+        // drawer: drawer(context),
         appBar: AppBar(
           centerTitle: true,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Icon(Icons.file_copy),
-              Text(" New File"),
+              Text(" Edit File"),
             ],
           ),
         ),
@@ -115,27 +116,27 @@ class _NewFileFormState extends State<NewFileForm> {
             color: mainColor,
           ),
           ...textfields(),
-          loader
-              ? LinearProgressIndicator()
-              : TextField(
-                  decoration: const InputDecoration(label: Text("Watch List")),
-                  controller: watchListController,
-                  onTap: () async {
-                    var data = await selectDropdown(
-                        context: context,
-                        setState: setState,
-                        data: list,
-                        displayValue: 'FullName',
-                        hint: 'Select Watch List');
-                    if (data == null) {
-                    } else {
-                      watchListController.text = data['EmployeeID'].toString() +
-                          '/' +
-                          data['FullName'];
-                      setState(() {});
-                    }
-                  },
-                ),
+          // loader
+          //     ? CircularProgressIndicator()
+          //     : TextField(
+          //         decoration: const InputDecoration(label: Text("Watch List")),
+          //         controller: watchListController,
+          //         onTap: () async {
+          //           var data = await selectDropdown(
+          //               context: context,
+          //               setState: setState,
+          //               data: list,
+          //               displayValue: 'FullName',
+          //               hint: 'Select Watch List');
+          //           if (data == null) {
+          //           } else {
+          //             watchListController.text = data['EmployeeID'].toString() +
+          //                 '/' +
+          //                 data['FullName'];
+          //             setState(() {});
+          //           }
+          //         },
+          //       ),
           inputButtons()
         ]),
       ),
@@ -147,7 +148,7 @@ class _NewFileFormState extends State<NewFileForm> {
       padding: const EdgeInsets.all(8.0),
       child: MaterialButton(
           color: mainColor,
-          child: const Text("Save"),
+          child: const Text("Update"),
           onPressed: () {
             saveFile();
           }),
@@ -176,7 +177,7 @@ class _NewFileFormState extends State<NewFileForm> {
   }
 
   saveFile() async {
-    // file_desc, employee_id, dept_id, sub_dept_id, token
+    // parameters: file_id, file_subject, file_desc, employee_id, token
     bool flag = validate();
     if (flag) {
       Map<String, dynamic> fieldValues = {};
@@ -193,12 +194,13 @@ class _NewFileFormState extends State<NewFileForm> {
       fieldValues['dept_id'] = data['dept_id'].toString();
       fieldValues['sub_dept_id'] = data['sub_dept_id'].toString();
       fieldValues['token'] = data['token'].toString();
-      var res = await createFileAPI(fieldValues);
+      var res = await saveEditFileAPI(fieldValues);
       // var res;
       showSnackbar(
           key: pageKey, msg: res['message'], status: res['status'] == 1);
       if (res['status'] == 1) {
         resetForm();
+        Navigator.of(context).pop(true);
       }
     } else {
       showSnackbar(key: pageKey, msg: "Complete the Form", status: false);

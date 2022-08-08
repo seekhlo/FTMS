@@ -10,6 +10,7 @@ String dashboard_url =
     "https://fmtsapi.ntu.edu.pk/dashboard/token/dept_id/sub_dept_id/employee_id";
 String receiveFileUrl = "https://fmtsapi.ntu.edu.pk/receive_file";
 String createFileUrl = "https://fmtsapi.ntu.edu.pk/create_file";
+String saveEditFileUrl = "https://fmtsapi.ntu.edu.pk/save_edit_file";
 
 Future loginAPI(cnic, pass) async {
   final http.Response res =
@@ -22,6 +23,14 @@ Future loginAPI(cnic, pass) async {
   // print(data);
   // print(user);
   // data.add(user['data']);
+  return data;
+}
+
+Future saveEditFileAPI(map) async {
+  print(map);
+  final http.Response res =
+      await http.post(Uri.parse(saveEditFileUrl), body: map);
+  var data = jsonDecode(res.body);
   return data;
 }
 
@@ -74,4 +83,12 @@ Future printBarcode(fileID) async {
   return jsonDecode(res.body)['data'];
   // return res.body;
   // return "a";
+}
+
+Future archiveFileAPI(fileID) async {
+  var data = Map<String, dynamic>.from(globalUser);
+  final http.Response res = await http.post(Uri.parse(
+      "https://fmtsapi.ntu.edu.pk/archive_file/${data['token']}/${data['employee_id']}/${fileID}"));
+  print(res.body);
+  return jsonDecode(res.body);
 }
