@@ -14,29 +14,47 @@ Map tiles = {};
 Map<String, dynamic> dashboard_map = {
   "average_time": {
     'title': "Average Time",
-    "icon": Icon(Icons.timelapse, size: 60),
+    "icon": Icon(
+      Icons.timelapse,
+      size: 60,
+      color: Colors.amber
+      ,
+    ),
     "link": "null",
   },
   "new_files": {
     'title': "New Files",
-    "icon": Icon(Icons.file_copy, size: 42),
+    "icon": Icon(
+      Icons.file_copy,
+      size: 42,
+      color: Colors.blueAccent,
+    ),
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/new_files/token/sub_dept_id/employee_id"),
   },
   "inprocess_files": {
     'title': "Inprocess Files",
-    "icon": Icon(Icons.wifi_protected_setup_sharp, size: 60),
+    "icon": Icon(Icons.wifi_protected_setup_sharp,
+        size: 60, color: Colors.blueGrey),
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/inprocess_files/token/sub_dept_id/employee_id"),
   },
   "opened_files": {
     'title': "Opened Files",
     "link": "null",
-    "icon": Icon(Icons.open_in_new, size: 60),
+    "icon": Icon(
+      Icons.open_in_new,
+      size: 60,
+      color: Colors.cyanAccent,
+    ),
   },
   "archived_files": {
     'title': "Archived Files",
-    "icon": Icon(Icons.archive, size: 60),
+    "icon": Icon(
+      Icons.archive,
+      size: 60,
+      color: Colors.purple,
+    ),
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/archived_files/token/sub_dept_id/employee_id"),
   },
@@ -44,30 +62,42 @@ Map<String, dynamic> dashboard_map = {
     'title': "Other Department",
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/other_dept_files/token/sub_dept_id/employee_id"),
-    "icon": Icon(Icons.other_houses, size: 60)
+    "icon": Icon(
+      Icons.other_houses,
+      size: 60,
+      color: Colors.purpleAccent,
+    )
   },
   "other_dept_files_received": {
     'title': "Other Department Received",
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/today_checkedin/token/sub_dept_id/employee_id"),
-    "icon": Icon(Icons.download, size: 60)
+    "icon": Icon(
+      Icons.download,
+      size: 60,
+      color: Colors.deepPurple,
+    )
   },
   "other_dept_files_sent": {
     'title': "Other Department Sent",
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/today_checkedout/token/sub_dept_id/employee_id"),
     "link": "null",
-    "icon": Icon(Icons.upload, size: 60)
+    "icon": Icon(
+      Icons.upload,
+      size: 60,
+      color: Colors.indigo,
+    )
   },
   "my_watch_list_files": {
     'title': "Watch List",
-    "icon": Icon(Icons.list, size: 60),
+    "icon": Icon(Icons.list, size: 60, color: Colors.black),
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/my_watchlist/token/sub_dept_id/employee_id"),
   },
   "completed_files": {
     'title': "Completed Files",
-    "icon": Icon(Icons.done, size: 60),
+    "icon": Icon(Icons.done, size: 60, color: Colors.green),
     "link": makeLink(
         "https://fmtsapi.ntu.edu.pk/completed_files/token/sub_dept_id/employee_id"),
   },
@@ -133,52 +163,58 @@ class _GridDashboardState extends State<GridDashboard> {
         }
       },
       child: Container(
-        decoration: BoxDecoration(
-            color: Color(color),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+          decoration: BoxDecoration(
+            //  color: Color(color),
+            /* boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],*/
+              // color: Colors.white,
+            border: Border.all(width: 0.5),
+              borderRadius: BorderRadius.circular(10)
               ),
-            ],
-            // color: Colors.white,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            data.icon!,
-            SizedBox(
-              height: 14,
+          child: Card(
+            elevation: 10,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                data.icon!,
+                SizedBox(
+                  height: 14,
+                ),
+                Center(
+                  child: Text(
+                    data.title!,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+                SizedBox(
+                  height: 13,
+                ),
+                Text(
+                  data.number!,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.openSans(
+                      textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600)),
+                ),
+              ],
             ),
-            Center(
-              child: Text(
-                data.title!,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600)),
-              ),
-            ),
-            SizedBox(
-              height: 13,
-            ),
-            Text(
-              data.number!,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600)),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        )
+      );
+
   }
 
   List<DashboardItem> myDList = [];
@@ -187,43 +223,46 @@ class _GridDashboardState extends State<GridDashboard> {
   @override
   Widget build(BuildContext context) {
     color = mainColor[800].hashCode;
-    return Scaffold(
-      backgroundColor: mainColor[200],
-      drawer: drawer(context),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Dashboard"),
-      ),
-      body: loader
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Column(
-              children: [
-                SizedBox(height: 20),
-                ListTile(
-                  tileColor: Colors.white,
-                  title: Text(
-                    globalUser['employee_name'],
-                    style: TextStyle(fontWeight: FontWeight.normal),
+    return SafeArea(
+      child: Scaffold(
+        
+        backgroundColor: Colors.white70,
+        drawer: drawer(context),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Dashboard"),
+        ),
+        body: loader
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  SizedBox(height: 20),
+                  ListTile(
+                    tileColor: Colors.white,
+                    title: Text(
+                      globalUser['employee_name'],
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    leading: Icon(Icons.person,color: Colors.blue,),
                   ),
-                  leading: Icon(Icons.person),
-                ),
-                SizedBox(height: 20),
-                Flexible(
-                  child: GridView.count(
-                      childAspectRatio: 1.0,
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 18,
-                      mainAxisSpacing: 18,
-                      children: myDList.map((data) {
-                        return getGridTile(data);
-                      }).toList()),
-                ),
-                SizedBox(height: 60),
-              ],
-            ),
+                  SizedBox(height: 20),
+                  Flexible(
+                    child: GridView.count(
+                        childAspectRatio: 1.0,
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 18,
+                        mainAxisSpacing: 18,
+                        children: myDList.map((data) {
+                          return getGridTile(data);
+                        }).toList()),
+                  ),
+                  SizedBox(height: 60),
+                ],
+              ),
+      ),
     );
   }
 }

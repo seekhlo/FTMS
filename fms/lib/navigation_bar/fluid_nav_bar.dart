@@ -47,6 +47,7 @@ class _HomeScreen extends State {
           ],
           onChange: _handleNavigationChange,
           style: const FluidNavBarStyle(
+            barBackgroundColor: Colors.white12,
               iconSelectedForegroundColor: Colors.white,
               iconUnselectedForegroundColor: Colors.white60),
           scaleFactor: 1.5,

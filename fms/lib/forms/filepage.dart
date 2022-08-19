@@ -5,6 +5,7 @@ import 'package:barcode/barcode.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fms/components/flashbar.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
@@ -64,7 +65,7 @@ class _FilePageState extends State<FilePage> {
 
   getButtons(var file, String title, String fileid) {
     List<Widget> buttons = [];
-    if (title.toLowerCase().contains('new file')) {
+    if (title.toLowerCase().contains('new file') || title.toLowerCase().contains('completed file') ||title.toLowerCase().contains('inprocess file') ) {
       buttons.add(MaterialButton(
         child: Text("Print Barcode"),
         onPressed: () async {
@@ -79,7 +80,7 @@ class _FilePageState extends State<FilePage> {
                       children: [
                         TextButton(
                             onPressed: () {
-                              save(screenShotKey, data['FMTSFileID']);
+                              save(screenShotKey, data['FMTSFileBarcode']);
                             },
                             child: Text("Save")),
                         RepaintBoundary(
@@ -129,7 +130,7 @@ class _FilePageState extends State<FilePage> {
         },
       ));
     }
-    if (title.toLowerCase().contains('opened file')) {
+    if (title.toLowerCase().contains('inprocess file') || title.toLowerCase().contains('completed file') ) {
       buttons.add(MaterialButton(
         child: Text("Archive File"),
         onPressed: () async {
@@ -175,10 +176,10 @@ class _FilePageState extends State<FilePage> {
   void save(screenShotKey, id) async {
     takeScreenshot(screenShotKey, id).then((value) async {
       bool? saved = await GallerySaver.saveImage(value.path);
-      print(saved);
+      showSnackbar(msg: saved);
       Navigator.of(context).pop();
     }).catchError((onError) {
-      print(onError);
+      showSnackbar(msg: onError);
     });
   }
 

@@ -130,7 +130,7 @@ MaterialColor mainColor = Colors.blue;
 List<MaterialColor> appColors = [
   Colors.blue,
   // Colors.green,
-  Colors.cyan,
+//  Colors.cyan,
   // Colors.orange,
   // Colors.purple,
 ];
